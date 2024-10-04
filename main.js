@@ -2,9 +2,7 @@ const $btnKick = document.getElementById('btn-kick');
 const $btnSlam = document.getElementById('btn-slam');
 
 const character = createPokemon('Pikachu', 100, 'health-character', 'progressbar-character');
-const enemy = createPokemon('Charmander', 100, 'health-enemy', 'progressbar-enemy');
-
-let isButtonDisabled = false;
+const enemy = createPokemon('Charmander', 120, 'health-enemy', 'progressbar-enemy');
 
 function createPokemon(name, hp, elHPId, elProgressbarId) {
     return {
@@ -13,103 +11,100 @@ function createPokemon(name, hp, elHPId, elProgressbarId) {
         damageHP: hp,
         elHP: document.getElementById(elHPId),
         elProgressbar: document.getElementById(elProgressbarId),
+
+        renderHP() {
+            this.renderHPLife();
+            this.renderProgressbarHP();
+        },
+        
+        renderHPLife() {
+            this.elHP.innerText = `${this.damageHP} / ${this.defaultHP}`;
+        },
+        
+        renderProgressbarHP() {
+            const healthPercentage = (this.damageHP / this.defaultHP) * 100;
+            this.elProgressbar.style.width = `${healthPercentage}%`;
+            this.elProgressbar.style.background = this.getProgressColor();
+        },
+
+        changeHP(damage) {
+            this.damageHP = Math.max(0, this.damageHP - damage);
+            this.renderHP();
+            return this.damageHP === 0;
+        },
+        
+        getProgressColor() {
+            const percentHP = (this.damageHP / this.defaultHP) * 100;
+            if (percentHP > 50) {
+                return 'linear-gradient(to right, lime, #8bf500)';
+            } else if (percentHP > 20) {
+                return 'linear-gradient(to right, orange, #ffcc00)'; 
+            } else {
+                return 'linear-gradient(to right, red, darkred)'; 
+            }
+        },
+
+        attack(enemy, damage) {
+            const characterDamage = this.randomDamage(damage);
+            const enemyDamage = enemy.randomDamage(damage);
+
+            if (this.changeHP(enemyDamage)) {
+                alert(`Бедный ${this.name} проиграл бой!`);
+            } else if (enemy.changeHP(characterDamage)) {
+                alert(`Бедный ${enemy.name} проиграл бой!`);
+            }
+
+            this.checkEndGame(enemy);
+        },
+
+        checkEndGame(enemy) {
+            if (this.damageHP === 0 || enemy.damageHP === 0) {
+                this.resetGame(enemy);
+            }
+        },
+
+        resetGame(enemy) {
+            this.damageHP = this.defaultHP;
+            enemy.damageHP = enemy.defaultHP;
+            this.renderHP();
+            enemy.renderHP();
+            enableButtons();
+        },
+
+        randomDamage(maxDamage) {
+            return Math.ceil(Math.random() * maxDamage);
+        }
     };
 }
 
 $btnKick.addEventListener('click', function () {
-    if (!isButtonDisabled) {
-        handleAttack(20);
-        disableButtonsTemporarily();
-    }
+    handleAttack(20);
 });
 
 $btnSlam.addEventListener('click', function () {
-    if (!isButtonDisabled) {
-        handleAttack(30);
-        disableButtonsTemporarily();
-    }
+    handleAttack(30);
 });
 
+function handleAttack(damage) {
+    character.attack(enemy, damage);
+    disableButtonsTemporarily();
+}
+
 function disableButtonsTemporarily() {
-    isButtonDisabled = true;
     $btnKick.disabled = true;
     $btnSlam.disabled = true;
-
-    setTimeout(function () {
-        isButtonDisabled = false;
-        $btnKick.disabled = false;
-        $btnSlam.disabled = false;
-    }, 500);
+    setTimeout(enableButtons, 500);
 }
 
-function handleAttack(damage) {
-    const characterDamage = random(damage);
-    const enemyDamage = random(damage);
-    console.log(`${characterDamage}`)
-    console.log(`${enemyDamage}`)
-    
-    if(changeHP(characterDamage, character) || changeHP(enemyDamage, enemy))
-        resetGame();
-}
-
-function init() {
-    console.log('Start game');
-    renderHP(character);
-    renderHP(enemy);
-}
-
-function renderHP(person) {
-    renderHPLife(person);
-    renderProgressbarHP(person);
-}
-
-function renderHPLife(person) {
-    person.elHP.innerText = person.damageHP + ' / ' + person.defaultHP;
-}
-
-function renderProgressbarHP(person) {
-    const healthPercentage = (person.damageHP / person.defaultHP) * 100;
-    person.elProgressbar.style.width = healthPercentage + '%';
-    person.elProgressbar.style.background = getProgressColor(person.damageHP, person.defaultHP);
-}
-
-function changeHP(count, person) {
-    if (person.damageHP <= count) {
-        person.damageHP = 0;
-        renderHP(person); 
-        alert('Бедный ' + person.name + ' проиграл бой!!!');
-        $btnKick.disabled = true;
-        $btnSlam.disabled = true;
-        return true;  
-    } else {
-        person.damageHP -= count;
-    }
-    renderHP(person);
-    return false;
-}
-
-function resetGame() {
-    character.damageHP = character.defaultHP;
-    enemy.damageHP = enemy.defaultHP;
-    renderHP(character);
-    renderHP(enemy);
+function enableButtons() {
     $btnKick.disabled = false;
     $btnSlam.disabled = false;
 }
 
-function random(num) {
-    return Math.ceil(Math.random() * num);
-}
-
-function getProgressColor(currentHP, maxHP) {
-    const percentHP = (currentHP / maxHP) * 100;
-    if (percentHP > 50) {
-        return 'linear-gradient(to right, lime, #8bf500)';
-    } else if (percentHP > 20) {
-        return 'linear-gradient(to right, orange, #ffcc00)'; 
-    } else {
-        return 'linear-gradient(to right, red, darkred)'; 
-    }
-}
-
 init();
+
+function init() {
+    console.log('Start game');
+    character.renderHP();
+    enemy.renderHP();
+}
