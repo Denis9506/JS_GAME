@@ -1,3 +1,5 @@
+import logs from './logs.js';
+
 const $btnKick = document.getElementById('btn-kick');
 const $btnSlam = document.getElementById('btn-slam');
 
@@ -122,18 +124,6 @@ function init() {
 
 
 
-const logs = [
-    '[ПЕРСОНАЖ №1] вспомнил что-то важное, но неожиданно [ПЕРСОНАЖ №2], не помня себя от испуга, ударил в предплечье врага.',
-    '[ПЕРСОНАЖ №1] поперхнулся, и за это [ПЕРСОНАЖ №2] с испугу приложил прямой удар коленом в лоб врага.',
-    '[ПЕРСОНАЖ №1] забылся, но в это время наглый [ПЕРСОНАЖ №2], приняв волевое решение, неслышно подойдя сзади, ударил.',
-    '[ПЕРСОНАЖ №1] пришел в себя, но неожиданно [ПЕРСОНАЖ №2] случайно нанес мощнейший удар.',
-    '[ПЕРСОНАЖ №1] поперхнулся, но в это время [ПЕРСОНАЖ №2] нехотя раздробил кулаком <вырезанно цензурой> противника.',
-    '[ПЕРСОНАЖ №1] удивился, а [ПЕРСОНАЖ №2] пошатнувшись влепил подлый удар.',
-    '[ПЕРСОНАЖ №1] высморкался, но неожиданно [ПЕРСОНАЖ №2] провел дробящий удар.',
-    '[ПЕРСОНАЖ №1] пошатнулся, и внезапно наглый [ПЕРСОНАЖ №2] беспричинно ударил в ногу противника.',
-    '[ПЕРСОНАЖ №1] расстроился, как вдруг, неожиданно [ПЕРСОНАЖ №2] случайно влепил стопой в живот соперника.',
-    '[ПЕРСОНАЖ №1] пытался что-то сказать, но вдруг, неожиданно [ПЕРСОНАЖ №2] со скуки, разбил бровь сопернику.'
-];
 function generateLog(character, enemy) {
     const randomIndex = Math.floor(Math.random() * logs.length);
     let logMessage = logs[randomIndex]
@@ -147,12 +137,12 @@ function logFight(character, enemy, damageCharacter, damageEnemy, isGameOver = f
 
     if (isGameOver) {
         if (character.damageHP === 0 && enemy.damageHP === 0) {
-            const drawMessage = `Игра окончена! Ничья, оба персонажа (${character.name} и ${enemy.name}) упали без сил!<br><br><br>`;
+            const drawMessage = `<span style="color: red;">Игра окончена! Ничья, оба персонажа (${character.name} и ${enemy.name}) упали без сил!</span><br><br><br>`;
             log.innerHTML = drawMessage + log.innerHTML;
         } else {
             const winner = character.damageHP > 0 ? character.name : enemy.name;
             const loser = character.damageHP > 0 ? enemy.name : character.name;
-            const gameOverMessage = `Игра окончена! ${winner} победил, а ${loser} проиграл!<br><br><br>`;
+            const gameOverMessage = `<span style="color: red;">Игра окончена! ${winner} победил, а ${loser} проиграл!</span><br><br><br>`;
             log.innerHTML = gameOverMessage + log.innerHTML;
         }
     } else {
