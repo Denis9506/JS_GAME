@@ -100,8 +100,26 @@ const maxClicks = 6;
 let clickCountKick = 0;
 let clickCountSlam = 0;
 
-$btnKick.addEventListener('click', () => handleAttack(20, 'Kick'));
-$btnSlam.addEventListener('click', () => handleAttack(30, 'Slam'));
+const createButtonClickCounter = function(buttonName) {
+    let totalClicks = 0;
+    return function() {
+        totalClicks++;
+        console.log(`Всего кликов для кнопки ${buttonName}: ${totalClicks}`);
+    };
+};
+
+const kickClickCounter = createButtonClickCounter('Kick');
+const slamClickCounter = createButtonClickCounter('Slam');
+
+$btnKick.addEventListener('click', () => {
+    kickClickCounter(); 
+    handleAttack(20, 'Kick');
+});
+
+$btnSlam.addEventListener('click', () => {
+    slamClickCounter(); 
+    handleAttack(30, 'Slam');
+});
 
 function handleAttack(damage, buttonType) {
     if (buttonType === 'Kick' && clickCountKick < maxClicks) {
