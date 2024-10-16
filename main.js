@@ -3,8 +3,8 @@ import logs from './logs.js';
 const $btnKick = document.getElementById('btn-kick');
 const $btnSlam = document.getElementById('btn-slam');
 
-const character = createPokemon('Pikachu', 20, 'health-character', 'progressbar-character');
-const enemy = createPokemon('Charmander', 20, 'health-enemy', 'progressbar-enemy');
+const character = createPokemon('Pikachu', 100, 'health-character', 'progressbar-character');
+const enemy = createPokemon('Charmander', 100, 'health-enemy', 'progressbar-enemy');
 
 function createPokemon(name, hp, elHPId, elProgressbarId) {
     const elHP = document.getElementById(elHPId);
@@ -86,6 +86,7 @@ function createPokemon(name, hp, elHPId, elProgressbarId) {
             enemy.damageHP = enemy.defaultHP;
             this.renderHP();
             enemy.renderHP();
+            resetClickCounts();
             enableButtons();
         },
 
@@ -95,11 +96,32 @@ function createPokemon(name, hp, elHPId, elProgressbarId) {
     };
 }
 
-$btnKick.addEventListener('click', () => handleAttack(20));
-$btnSlam.addEventListener('click', () => handleAttack(30));
+const maxClicks = 6;
+let clickCountKick = 0;
+let clickCountSlam = 0;
 
-function handleAttack(damage) {
-    character.attack(enemy, damage);
+$btnKick.addEventListener('click', () => handleAttack(20, 'Kick'));
+$btnSlam.addEventListener('click', () => handleAttack(30, 'Slam'));
+
+function handleAttack(damage, buttonType) {
+    if (buttonType === 'Kick' && clickCountKick < maxClicks) {
+        clickCountKick++;
+        console.log(`Кнопка Kick была нажата ${clickCountKick} раз(а). Осталось нажатий: ${maxClicks - clickCountKick}`);
+        character.attack(enemy, damage);
+    } else if (buttonType === 'Slam' && clickCountSlam < maxClicks) {
+        clickCountSlam++;
+        console.log(`Кнопка Slam была нажата ${clickCountSlam} раз(а). Осталось нажатий: ${maxClicks - clickCountSlam}`);
+        character.attack(enemy, damage);
+    }
+
+    if (clickCountKick >= maxClicks) {
+        $btnKick.disabled = true;
+    }
+
+    if (clickCountSlam >= maxClicks) {
+        $btnSlam.disabled = true;
+    }
+
     disableButtonsTemporarily();
 }
 
@@ -110,19 +132,15 @@ function disableButtonsTemporarily() {
 }
 
 function enableButtons() {
-    $btnKick.disabled = false;
-    $btnSlam.disabled = false;
+    if (clickCountKick < maxClicks) $btnKick.disabled = false;
+    if (clickCountSlam < maxClicks) $btnSlam.disabled = false;
 }
 
-init();
-
-function init() {
-    console.log('Start game');
-    character.renderHP();
-    enemy.renderHP();
+function resetClickCounts() {
+    clickCountKick = 0;
+    clickCountSlam = 0;
+    console.log('Счетчики кликов сброшены');
 }
-
-
 
 function generateLog(character, enemy) {
     const randomIndex = Math.floor(Math.random() * logs.length);
@@ -155,4 +173,12 @@ function logFight(character, enemy, damageCharacter, damageEnemy, isGameOver = f
 
         log.innerHTML = fightInfo + log.innerHTML;
     }
+}
+
+init();
+
+function init() {
+    console.log('Start game');
+    character.renderHP();
+    enemy.renderHP();
 }
