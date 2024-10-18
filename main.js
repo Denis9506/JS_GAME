@@ -100,7 +100,6 @@ const logFight = (character, enemy, damageCharacter, damageEnemy, isGameOver = f
     }
 };
 
-// Переместил createPokemon после использования
 const createPokemon = (name, hp, elHPId, elProgressbarId) => {
     const elHP = document.getElementById(elHPId);
     const elProgressbar = document.getElementById(elProgressbarId);
