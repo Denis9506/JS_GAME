@@ -1,5 +1,6 @@
 import { Pokemon } from './pokemon.js';
 import { createButtonClickCounter,handleClicks } from './battle.js';
+import { logFinish } from './log.js';
 
 const $btnKick = document.getElementById('btn-kick');
 const $btnSlam = document.getElementById('btn-slam');
@@ -12,10 +13,12 @@ const maxClicks = 6;
 const kickClickCounter = createButtonClickCounter('Kick');
 const slamClickCounter = createButtonClickCounter('Slam');
 
-const character = new Pokemon('Pikachu', 100, 'health-character', 'progressbar-character');
-const enemy = new Pokemon('Charmander', 100, 'health-enemy', 'progressbar-enemy');
+const character = new Pokemon('Pikachu', 10, 'health-character', 'progressbar-character');
+const enemy = new Pokemon('Charmander', 10, 'health-enemy', 'progressbar-enemy');
 
 function resetGame() {
+    logFinish(character,enemy);
+
     character.resetHP();
     enemy.resetHP();
     resetClickCounts();

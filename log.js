@@ -26,3 +26,21 @@ export const logFight = (character, enemy, damageCharacter, damageEnemy, isGameO
         log.innerHTML = fightInfo + log.innerHTML;
     }
 };
+
+export const logFinish = (character,enemy)=>{
+    const log = document.getElementById('logs');
+    console.log("p",character.damageHP);
+    console.log("e",enemy.damageHP);
+    let gameOverMessage;
+    if(character.damageHP===0 &&enemy.damageHP===0){
+        gameOverMessage = `<span style="color: red;">НІЧИЯ!</span><br><br><br>`;
+        
+    }
+    else{
+        const winner = character.damageHP > 0 ? character.name : enemy.name;
+        const loser = character.damageHP > 0 ? enemy.name : character.name;
+        gameOverMessage=`<span style="color: red;">Игра окончена! ${winner} победил, а ${loser} проиграл!</span><br><br><br>`;
+    }   
+
+    log.innerHTML = gameOverMessage + log.innerHTML;
+};
