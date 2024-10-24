@@ -1,7 +1,9 @@
 * {
     box-sizing: border-box;
 }
-
+#logs{
+    margin-top: 20px;    
+}
 html, body {
     padding: 0;
     margin: 0;
@@ -40,8 +42,10 @@ body {
     position: relative;
     margin: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 .playground {

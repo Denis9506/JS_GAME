@@ -16,55 +16,46 @@
              src="./assets/Pokemon_logo.png"
              alt="Pokemon">
     </header>
-    <div class="playground">
+    
+    <div id="start-screen" style="display: flex; justify-content: center;">
+        <button id="start-btn" class="start-btn button" >Start Game</button>
+    </div>
+
+    <div class="playground" id="playground" style="display: none;">
+        <div id="score">Enemies defeated: 0</div>
         <div class="pokemon character">
             <span class="lvl">Lv. 1</span>
-
-            <img src="assets/pikachu.png" class="sprite">
-
+            <img src="" class="sprite" id="character-img">
             <div class="details">
-                <h2 class="name" id="name-character">
-                    Pikachu
-                </h2>
+                <h2 class="name" id="name-character">Character Name</h2>
                 <div class="hp">
                     <div class="bar">
                         <div class="health" id="progressbar-character" style="width: 100%;"></div>
                     </div>
-                    <span class="text" id="health-character">100 / 100</span>
+                    <span class="text" id="health-character">HP</span>
                 </div>
             </div>
         </div>
 
-        <div class="control">
-            <button class="button" id="btn-kick">
-                Thunder Jolt
-            </button>
-            <hr>
-            <button class="button" id="btn-slam">
-                Slam Attack
-            </button>
+        <div class="control" id="control-panel">
         </div>
-        
+
         <div class="pokemon enemy">
             <span class="lvl">Lv. 1</span>
-
-            <img src="assets/charmander.png" class="sprite">
-
+            <img src="" class="sprite" id="enemy-img">
             <div class="details">
-                <h2 class="name" id="name-enemy">
-                    Charmander
-                </h2>
+                <h2 class="name" id="name-enemy">Enemy Name</h2>
                 <div class="hp">
                     <div class="bar">
                         <div class="health" id="progressbar-enemy" style="width: 100%;"></div>
                     </div>
-                    <span class="text" id="health-enemy">100 / 100</span>
+                    <span class="text" id="health-enemy">HP</span>
                 </div>
             </div>
         </div>
     </div>
-<div id="logs"></div> 
 
+    <div id="logs"></div>
 </div>
 
 <div class="catch_screen"></div>
